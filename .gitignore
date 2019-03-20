@@ -91,5 +91,6 @@ db.sqlite3
 .idea/
 projects/migrations/
 users/migrations/
+educations/migrations/
 
 venv/

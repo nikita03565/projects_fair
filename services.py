@@ -15,7 +15,7 @@ def get_courses_in_which_user_has_been_enrolled_as_teacher(user):
     )
 
 
-def get_course_teachers(project):
+def get_project_teachers(project):
     return project.participants.filter(
         participations__role=Participation.ROLE_TEACHER
     )

@@ -41,21 +41,9 @@ class Participation(models.Model):
         (ROLE_STUDENT, _('Student')),
         (ROLE_TEACHER, _('Teacher'))
     )
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='participations',
-        on_delete=models.CASCADE,
-    )
-    course = models.ForeignKey(
-        'Project',
-        related_name='participations',
-        on_delete=models.CASCADE,
-    )
-    role = models.CharField(
-        max_length=2,
-        choices=ROLE_CHOICES,
-        default=ROLE_STUDENT,
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='participations', on_delete=models.CASCADE, )
+    project = models.ForeignKey('Project', related_name='participations', on_delete=models.CASCADE, )
+    role = models.CharField(max_length=2, choices=ROLE_CHOICES, default=ROLE_STUDENT, )
 
     class Meta:
-        unique_together = ('user', 'course')
+        unique_together = ('user', 'project')
