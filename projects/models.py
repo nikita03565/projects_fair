@@ -1,18 +1,28 @@
 from django.db import models
 from users.models import User
-from datetime import date
+from datetime import date, timedelta
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Project(models.Model):
-    title = models.CharField(max_length=255, help_text="Название проекта", unique=True, )
-    description_short = models.TextField(max_length=1024, help_text="Краткое описание проекта", )
-    description_full = models.TextField(max_length=8192, help_text="Подробное описание проекта", )
-    num_participants = models.PositiveSmallIntegerField(help_text="Количество участников", default=5)
-    date_start = models.DateField("Дата начала проекта", default=date.today)
-    date_end = models.DateField("Дата окончания проекта", default=date.today)
-    date_reg_end = models.DateField("Дата окончания приема заявок", default=date.today)
+    title = models.CharField(max_length=255, help_text="Title of the project", unique=True, )
+    description_short = models.TextField(max_length=1024, help_text="Brief description", )
+    description_full = models.TextField(max_length=8192, help_text="Detail description", )
+    num_participants = models.PositiveSmallIntegerField(help_text="Number of participants", default=5)
+    date_start = models.DateField("Project start date", default=date.today,
+                                  validators=[MinValueValidator(date.today()),
+                                              MaxValueValidator(date.today() + timedelta(weeks=260))],
+                                  )
+    date_end = models.DateField("Project end date", default=date.today,
+                                validators=[MinValueValidator(date.today()),
+                                            MaxValueValidator(date.today() + timedelta(weeks=260))],
+                                )
+    date_reg_end = models.DateField("Application deadline", default=date.today,
+                                    validators=[MinValueValidator(date.today()),
+                                                MaxValueValidator(date.today() + timedelta(weeks=260))],
+                                    )
     participants = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Participation', related_name='projects', )
 
     PROJECT_STATUS = (

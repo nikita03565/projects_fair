@@ -33,16 +33,18 @@ class Faculty(models.Model):
 
 class Education(models.Model):
     BACHELOR_STAGE = 'B'
+    SPECIALTY_STAGE = 'S'
     MASTER_STAGE = 'M'
     GRADUATE_STUDENT_STAGE = 'G'
     STAGE_CHOICES = (
         (BACHELOR_STAGE, _('Bachelor')),
         (MASTER_STAGE, _('Master')),
+        (SPECIALTY_STAGE, _('Specialist')),
         (GRADUATE_STUDENT_STAGE, _('Graduate Student')),
     )
-    edu = models.ForeignKey(University,  on_delete=models.CASCADE,   related_name='education')
+    university = models.ForeignKey(University,  on_delete=models.CASCADE,   related_name='education')
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE,   related_name='education')
-    prog = models.ForeignKey(EduProgram, on_delete=models.CASCADE,   related_name='education')
+    eduProgram = models.ForeignKey(EduProgram, on_delete=models.CASCADE,   related_name='education')
     stage = models.CharField(max_length=1, choices=STAGE_CHOICES, default=BACHELOR_STAGE, )
     enroll_year = models.PositiveIntegerField(help_text="Enroll year",
                                               validators=[MinValueValidator(1984),
@@ -54,5 +56,5 @@ class Education(models.Model):
                                                   )
 
     def __str__(self):
-        return str(self.edu.__str__() + " " + self.prog.__str__() + " " + self.enroll_year.__str__() + " " +
-                   self.graduation_year.__str__())
+        return str(self.university.__str__() + " " + self.faculty.__str__() +" " + self.eduProgram.__str__() + " " +
+                   self.enroll_year.__str__() + " " + self.graduation_year.__str__())

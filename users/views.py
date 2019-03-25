@@ -3,7 +3,7 @@ from rest_framework import generics
 from .models import User
 from django.shortcuts import get_object_or_404
 from projects.models import Project
-from projects.serializers import ProjectListSerializer
+from projects.serializers import ProjectSerializer
 import services
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -22,12 +22,12 @@ class UserViewSet(viewsets.ModelViewSet):
     def user_projects_as_teacher(self, request, pk):
         user = self.get_object()
         projects = services.get_courses_in_which_user_has_been_enrolled_as_teacher(user)
-        serializer = ProjectListSerializer(projects, many=True)
+        serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def user_projects_as_student(self, request, pk):
         user = self.get_object()
         projects = services.get_courses_in_which_user_has_been_enrolled_as_student(user)
-        serializer = ProjectListSerializer(projects, many=True)
+        serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)

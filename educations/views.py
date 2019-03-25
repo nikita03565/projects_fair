@@ -1,43 +1,24 @@
 from .serializers import FacultySerializer, EducationSerializer, EduProgramSerializer, UniversitySerializer
 from .models import EduProgram, Education, University, Faculty
-from rest_framework import generics
+from rest_framework import viewsets
 
 
-class FacultyList(generics.ListCreateAPIView):
+class FacultyViewSet(viewsets.ModelViewSet):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
 
 
-class FacultyDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Faculty.objects.all()
-    serializer_class = FacultySerializer
-
-
-class UniversityList(generics.ListCreateAPIView):
+class UniversityViewSet(viewsets.ModelViewSet):
     queryset = University.objects.all()
     serializer_class = UniversitySerializer
 
 
-class UniversityDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = University.objects.all()
-    serializer_class = UniversitySerializer
-
-
-class EducationList(generics.ListCreateAPIView):
+class EducationViewSet(viewsets.ModelViewSet):
     queryset = Education.objects.all()
     serializer_class = EducationSerializer
 
 
-class EducationDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Education.objects.all()
-    serializer_class = EducationSerializer
-
-
-class EduProgramList(generics.ListCreateAPIView):
+class EduProgramViewSet(viewsets.ModelViewSet):
     queryset = EduProgram.objects.all()
     serializer_class = EduProgramSerializer
 
-
-class EduProgramDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = EduProgram.objects.all()
-    serializer_class = EduProgramSerializer

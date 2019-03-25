@@ -1,16 +1,10 @@
 from .models import Project
-from .serializers import ProjectListSerializer, ProjectDetailSerializer
-from rest_framework import generics
+from .serializers import ProjectSerializer
+from rest_framework import viewsets
 from rest_framework import permissions
 
 
-class ProjectList(generics.ListCreateAPIView):
+class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
-    serializer_class = ProjectListSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
-
-
-class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectDetailSerializer
+    serializer_class = ProjectSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
