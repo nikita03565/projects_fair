@@ -92,5 +92,7 @@ db.sqlite3
 projects/migrations/
 users/migrations/
 educations/migrations/
+skills/migrations/
+tags/migrations/
 
 venv/
