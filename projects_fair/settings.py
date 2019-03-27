@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'skills',
     'tags',
     'rest_framework',
+    'rest_framework.authtoken',
     'drf_yasg',
 ]
 
