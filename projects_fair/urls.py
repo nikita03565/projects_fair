@@ -7,8 +7,10 @@ from projects import views as projects_views
 from tags import views as tags_views
 from skills import views as skills_views
 from rest_framework import permissions
+from users.views import LoginView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+
 
 
 schema_view = get_schema_view(
@@ -37,7 +39,8 @@ router.register(r'tags', tags_views.TagViewSet)
 
 urlpatterns = [
     path('api/v1/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls')),
+    path('api/v1/auth', LoginView.as_view()),
+    # path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

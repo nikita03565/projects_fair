@@ -9,6 +9,10 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import permissions
+from rest_framework.views import APIView
+from django.contrib.auth import login
+from rest_framework.authtoken.models import Token
+from .serializers import LoginSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -28,3 +32,13 @@ class UserViewSet(viewsets.ModelViewSet):
         projects = services.get_courses_in_which_user_has_been_enrolled_as_student(user)
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
+
+
+class LoginView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        login(request, user)
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({"token": token.key}, status=200)
