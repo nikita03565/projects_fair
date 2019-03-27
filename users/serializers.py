@@ -5,10 +5,10 @@ from rest_framework import exceptions
 from django.shortcuts import get_object_or_404
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'first_name', 'last_name', 'middle_name', 'is_staff', 'is_active',
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'middle_name', 'is_staff', 'is_active',
                   'groups', 'bio', 'education', 'skills')
 
 

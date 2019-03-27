@@ -19,3 +19,9 @@ def get_project_teachers(project):
     return project.participants.filter(
         participations__role=Participation.ROLE_TEACHER
     )
+
+
+def get_project_students(project):
+    return project.participants.filter(
+        participations__role=Participation.ROLE_STUDENT
+    )
