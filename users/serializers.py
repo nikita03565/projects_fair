@@ -13,10 +13,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = ('email', 'password')
-
     email = serializers.EmailField()
     password = serializers.CharField()
 
@@ -39,12 +35,12 @@ class LoginSerializer(serializers.ModelSerializer):
             raise exceptions.ValidationError(msg)
         return data
 
-
-class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ('email', 'password', 'first_name', 'last_name')
+        fields = ('email', 'password')
 
+
+class RegistrationSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
     password = serializers.CharField(min_length=8, write_only=True)
     first_name = serializers.CharField()
@@ -56,3 +52,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
                                                     validated_data['first_name'],
                                                     validated_data['last_name'])
         return user
+
+    class Meta:
+        model = get_user_model()
+        fields = ('email', 'password', 'first_name', 'last_name')
