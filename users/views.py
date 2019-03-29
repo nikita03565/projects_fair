@@ -1,13 +1,13 @@
 from django.contrib.auth import login
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
-
-from .serializers import LoginSerializer
-from .serializers import UserSerializer
+from rest_framework import status
+from .serializers import LoginSerializer, UserSerializer, RegistrationSerializer
 from .models import User
 from projects.serializers import ProjectSerializer
 from services import get_courses_in_which_user_has_been_enrolled_as_student, \
@@ -34,10 +34,38 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class LoginView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data["user"]
+        user = serializer.validated_data['user']
         login(request, user)
         token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key}, status=200)
+        return Response({'token': token.key}, status=status.HTTP_200_OK)
+
+
+class RegistrationView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = RegistrationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if serializer.is_valid():
+            user = serializer.save()
+            if user:
+                token = Token.objects.create(user=user)
+                json = serializer.data
+                json['token'] = token.key
+                return Response(json, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChangePasswordView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        user = get_object_or_404(User, email=request.user.email)
+        user.set_password(request.data.get("new_password", ""))
+        user.save()
+        return Response({'detail': 'Password has been saved.'})

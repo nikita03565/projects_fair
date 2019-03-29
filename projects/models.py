@@ -7,7 +7,6 @@ from datetime import date, timedelta
 
 from skills.models import Skill
 from tags.models import Tag
-from users.models import User
 
 
 class Project(models.Model):
@@ -54,8 +53,7 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):
-        return "/%i/" % self.id
+
 
 
 class Participation(models.Model):
