@@ -17,6 +17,7 @@ from services import get_courses_in_which_user_has_been_enrolled_as_student, \
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def user_projects_as_teacher(self, request, pk):

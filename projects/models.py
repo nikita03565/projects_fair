@@ -54,8 +54,6 @@ class Project(models.Model):
         return self.title
 
 
-
-
 class Participation(models.Model):
     ROLE_STUDENT = 'ST'
     ROLE_TEACHER = 'TE'
