@@ -26,4 +26,3 @@ class EduProgramViewSet(viewsets.ModelViewSet):
     queryset = EduProgram.objects.all()
     serializer_class = EduProgramSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-

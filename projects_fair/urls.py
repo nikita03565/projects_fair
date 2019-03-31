@@ -39,9 +39,9 @@ router.register(r'tags', tags_views.TagViewSet)
 
 urlpatterns = [
     path('api/v1/', include(router.urls)),
-    path('api/v1/signin/', LoginView.as_view()),
-    path('api/v1/signup/', RegistrationView.as_view()),
-    path('api/v1/password_change/', ChangePasswordView.as_view()),
+    path('api/v1/signin/', LoginView.as_view(), name='signin'),
+    path('api/v1/signup/', RegistrationView.as_view(), name='signup'),
+    path('api/v1/password_change/', ChangePasswordView.as_view(), name='password-change'),
     # path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
