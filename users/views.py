@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
+from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
 from .serializers import LoginSerializer, UserSerializer, RegistrationSerializer
 from .models import User
@@ -17,6 +18,7 @@ from services import get_courses_in_which_user_has_been_enrolled_as_student, \
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     @action(detail=True, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def user_projects_as_teacher(self, request, pk):
@@ -69,3 +71,11 @@ class ChangePasswordView(APIView):
         user.set_password(request.data.get("new_password", ""))
         user.save()
         return Response({'detail': 'Password has been saved.'})
+
+
+class LogoutView(APIView):
+    authentication_classes = (TokenAuthentication, )
+
+    def post(self, request):
+        logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)

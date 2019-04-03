@@ -7,7 +7,7 @@ from projects import views as projects_views
 from tags import views as tags_views
 from skills import views as skills_views
 from rest_framework import permissions
-from users.views import LoginView, RegistrationView, ChangePasswordView
+from users.views import LoginView, RegistrationView, ChangePasswordView, LogoutView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
@@ -39,9 +39,11 @@ router.register(r'tags', tags_views.TagViewSet)
 
 urlpatterns = [
     path('api/v1/', include(router.urls)),
-    path('api/v1/signin', LoginView.as_view()),
-    path('api/v1/signup', RegistrationView.as_view()),
-    path('api/v1/password_change', ChangePasswordView.as_view()),
+    path('api/v1/signin/', LoginView.as_view(), name='signin'),
+    path('api/v1/signup/', RegistrationView.as_view(), name='signup'),
+    path('api/v1/password_change/', ChangePasswordView.as_view(), name='password-change'),
+    path('api/v1/signout/', LogoutView.as_view(), name='signout'),
+
     # path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
