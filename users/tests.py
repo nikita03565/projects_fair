@@ -1,4 +1,4 @@
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
@@ -137,7 +137,7 @@ class AccountTests(APITestCase):
 
     def test_authorize_wrongData(self):
         url = reverse("signin")
-        data = {'email': 'wrongtest@test.tes', 'password': '12345'}
+        data = {'email': 'wrongtest@test.test', 'password': '12345'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -145,8 +145,40 @@ class AccountTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_change_password_no_authorized(self):
+    def test_change_password_unauthorized(self):
         url = reverse("password-change")
         self.user = User.objects.create_user(username='testUser', password='12345', email="test@test.test")
         response = self.client.post(url, {'new_password': "12345678"}, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_change_password(self):
+        url = reverse("password-change")
+        self.user = User.objects.create_user(username='testUser', password='12345', email="test@test.test")
+        data = {'email': 'test@test.test', 'password': '12345'}
+        response = self.client.post(reverse("signin"), data, format='json')
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
+        response = client.post(url, {'new_password': "12345678"}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['detail'], 'Password has been saved.')
+        response = self.client.post(reverse("signin"), data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.post(reverse("signin"), {'email': 'test@test.test', 'password': '12345678'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_signout_unauthorized(self):
+        url = reverse("signout")
+        response = self.client.post(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_user_signout(self):
+        url = reverse("signout")
+        self.user = User.objects.create_user(username='testUser', password='12345', email="test@test.test")
+        data = {'email': 'test@test.test', 'password': '12345'}
+        response = self.client.post(reverse("signin"), data, format='json')
+        token = response.data['token']
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        response = client.post(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = client.post(url, {'new_password': "12345678"}, format='json')
