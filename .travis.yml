@@ -10,3 +10,10 @@ before_script:
   - python manage.py migrate
 script:
   - python manage.py test
+deploy:
+  provider: heroku
+  api_key:
+    secure: "U0aJJ3WCqdznh/2wJbKosIpOV++ltjp77xvc5uMCZchMXGZcartbXSrkdLXetMiuS4pfLzkQyTPiyVg1rOwsGncz+2l4Xkx665pxpCvcwZBejxgVHSy0/K0PMQ3s/q7Nc+mQK1zK0Gc6bhPXluQwdpEo9OuAcP4XS5NRi66LFez9AzjVw3ZoRiU6c1juGuIjTtBsmJk7GJezdhJ8r5SNf8JHgyhxLipYTxuzgFKjZclCOdthevgR3HQTept08IpeX0aGMQHr6BDzXLoTU/GosnBbwfHNi6iO1PVPtZ6B8xoJs2qz911omdn6GrUfTZS2pPEeLZToupycQ7DjNQrNiCtGi/XxSj9r4NIoap+BB4eQu9d2Md3ys8tC1m+vq2YSTgM63FMSCvjOp4f/l32eKr7EUHAxXwlHL8wMJxgK+SUf6HIXmv64Jx2GD0fZ2te5+kcxc0ZJ3HknRe9tYDF8ZLUqJvfKfPL8xeN0KuR09jprNRapa0Ka7d+avcT8uAziSyg0kEcdTZna2bPVRZDMQU7KNpNG3ASlz8cpgitNkhamTVz8iZy7Hx5enDgyaoC/g+dyecpJvle2bAwyGU7iUAUz4IeGtKsUMjsApukFMsMAnV1xIQB5GZ7UYpAGZtWsoM51T/ZEjLqmar0MmGNPiQ8a90PIdKlmvketSIS7VFs="
+  app: projects-fair
+  on:
+    repo: nikita03565/projects_fair
