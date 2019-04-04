@@ -1,4 +1,5 @@
 import os
+from os.path import join
 from decouple import config, Csv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
