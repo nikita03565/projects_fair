@@ -114,3 +114,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'users.User'
+
+STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static'))
