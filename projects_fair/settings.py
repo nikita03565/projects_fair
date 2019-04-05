@@ -1,4 +1,5 @@
 import os
+from os.path import join
 from decouple import config, Csv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,6 +25,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
+    "gunicorn",
 ]
 
 MIDDLEWARE = [
@@ -113,3 +115,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'users.User'
+
+STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static'))
