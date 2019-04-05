@@ -4,16 +4,13 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
+services:
+  - docker
 before_script:
   - cp .env.example .env
   - python manage.py makemigrations
   - python manage.py migrate
 script:
   - python manage.py test
-deploy:
-  provider: heroku
-  api_key:
-    secure: jdb3X+c53aquKjev1ZCGwwZEJlyj1JYG/ZvpDBowFW4yLsMo6VjC4dyXrij2qOdBYvsq+Y6OldY04jBffjTV8Zo89uFDA0SXqzjkPkxrrYCJxZuOjwdWj4UgWsWnVyXrlhNIO8PPCtapI0uIOqgaH444xfqgs9mte8yPZ3ocESvehVT10s6sbBmvVpe3jyDM77EEETuKcNKBxiQ2Py2ferZ3+LfYxFVS9fvnayWknGrQRQ1eYa6FwmZU30rdi0/qhVUYxRba1Iv0pDIDTW8rLnhB9tFlB6NBSrcfn8UAOevuQjSFAXPH19e5VNbLGl6dvHxYZlg/Adsar/sZWV0tQ4WiLtJHVaILO5ZIJL3/aoRvKOTlRIa8GWrMtGlYfzMS9oYMuLfxVfsuEZ06OijAMYj05sHzzYol3TsSMG7t8rbS9dBwhlaUCy4gjPeFP7fOz0VwPiIacU5xZX2NNrhKNW5lOXA83jfLTzbOfkSsP32ihvDekTkQn41jWBU8RqqHIBGKzLgS+lkCYGPOV2rL6srscuNx7GDlA2xzhzBQvPIPoKIb4zvF6yJQ4iZXfCM9383jUhZCQu0orv7KcDgB7KVfmBrYkJHUHksoc8r5t4miiOzYGb0/nGQoWJSaAJ5eRX4u38obb2fw+jEsgh1MtLenh2KOfb6MkrX9DtXn1fw=
-  app: projects-fair
-  on:
-    repo: nikita03565/projects_fair
+after_success:
+  - bash .travis/deploy_heroku.sh
