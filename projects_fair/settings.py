@@ -119,4 +119,4 @@ AUTH_USER_MODEL = 'users.User'
 
 STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static'))
 
-django_heroku.settings(locals())
+django_heroku.settings(locals(), test_runner=False)
