@@ -12,5 +12,3 @@ before_script:
   - python manage.py migrate
 script:
   - python manage.py test
-after_success:
-  - bash .travis/deploy_heroku.sh
