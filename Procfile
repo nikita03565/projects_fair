@@ -1,0 +1,1 @@
+web: gunicorn projects_fair.wsgi

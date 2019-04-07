@@ -1,6 +1,7 @@
 import os
 from os.path import join
 from decouple import config, Csv
+import django_heroku
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -117,3 +118,5 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'users.User'
 
 STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), 'static'))
+
+django_heroku.settings(locals())
