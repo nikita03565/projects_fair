@@ -29,6 +29,7 @@ deploy:
   app: projects-fair
   on:
     repo: nikita03565/projects_fair
-  run: 
+  after_deploy:
     - "python manage.py makemigrations"
-    - "python manage.py migrate"
+    - "python manage.py migrate" 
+
