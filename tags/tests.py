@@ -9,82 +9,84 @@ import json
 
 
 class TagsTests(APITestCase):
-    def setUp(self):
-        self.url = reverse("tag-list")
-        self.user_data = {'email': 'foobar@example.com', 'password': 'somepassword'}
-        data = {
-            'email': self.user_data['email'],
-            'password': self.user_data['password'],
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.url_list = "tag-list"
+        cls.url_detail = "tag-detail"
+        cls.serializer = TagSerializer
+        cls.Tags = [Tag.objects.create(name="Tag1"),
+                    Tag.objects.create(name="Tag2"),
+                    Tag.objects.create(name="Tag3")
+                    ]
+        cls.user_data = {'email': 'foobar@example.com', 'password': 'somepassword'}
+        cls.data = {
+            'email': cls.user_data['email'],
+            'password': cls.user_data['password'],
             'first_name': 'First',
             'last_name': 'Last'
         }
-        self.client.post(reverse("signup"), data, format='json')
-        self.tag = [Tag.objects.create(name="tag1"),
-                    Tag.objects.create(name="tag2"),
-                    Tag.objects.create(name="tag3")
-                    ]
+        cls.client = APIClient()
+        cls.client.post(reverse("signup"), cls.data, format='json')
 
-    def test_get_tags(self):
-        response = self.client.get(reverse("tag-list"))
+    def test_get_Tags(self):
+        response = self.client.get(reverse(self.url_list))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        tag_serializer_data = json.dumps(TagSerializer(instance=self.tag, many=True).data)
-        tag_serializer_data = json.loads(tag_serializer_data)
+        serializer_data = json.dumps(self.serializer(instance=self.Tags, many=True).data)
+        serializer_data = json.loads(serializer_data)
         response_data = json.loads(response.content)
-        self.assertEqual(tag_serializer_data, response_data)
+        self.assertEqual(serializer_data, response_data)
 
-    def test_get_tag(self):
-        response = self.client.get(reverse("tag-detail", kwargs={"pk": 2}))
+    def test_get_Tag(self):
+        response = self.client.get(reverse(self.url_detail, kwargs={"pk": 2}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        tag_serializer_data = json.dumps(TagSerializer(instance=self.tag[1], many=False).data)
-        tag_serializer_data = json.loads(tag_serializer_data)
+        serializer_data = json.dumps(self.serializer(instance=self.Tags[1], many=False).data)
+        serializer_data = json.loads(serializer_data)
         response_data = json.loads(response.content)
-        self.assertEqual(tag_serializer_data, response_data)
+        self.assertEqual(serializer_data, response_data)
 
-    def test_post_tag_unauthorized(self):
-        response = self.client.post(reverse("tag-list"), data={"name": "new_tag"})
+    def test_post_Tag_unauthorized(self):
+        response = self.client.post(reverse(self.url_list), data={"name": "new_Tag"})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_post_tag_authorized(self):
+    def test_post_Tag_authorized(self):
         response = self.client.post(reverse("signin"), self.user_data, format='json')
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
-        response = client.post(reverse("tag-list"), data={"name": "new_tag"})
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
+        response = self.client.post(reverse(self.url_list), data={"name": "new_Tag"})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['name'], 'new_tag')
+        self.assertEqual(response.data['name'], 'new_Tag')
 
-    def test_put_tag_unauthorized(self):
-        response = self.client.put(reverse("tag-detail", kwargs={"pk": 2}), data={"name": "new_tag"})
+    def test_put_Tag_unauthorized(self):
+        response = self.client.put(reverse(self.url_detail, kwargs={"pk": 2}), data={"name": "new_Tag"})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_put_tag_authorized(self):
+    def test_put_Tag_authorized(self):
         response = self.client.post(reverse("signin"), self.user_data, format='json')
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
-        response = client.put(reverse("tag-detail", kwargs={"pk": 2}), data={"name": "new_tag"})
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
+        response = self.client.put(reverse(self.url_detail, kwargs={"pk": 2}), data={"name": "new_Tag"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], 'new_tag')
+        self.assertEqual(response.data['name'], 'new_Tag')
 
-    def test_patch_tag_unauthorized(self):
-        response = self.client.patch(reverse("tag-detail", kwargs={"pk": 3}), data={"name": "new_tag"})
+    def test_patch_Tag_unauthorized(self):
+        response = self.client.patch(reverse(self.url_detail, kwargs={"pk": 3}), data={"name": "new_Tag"})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_patch_tag_authorized(self):
+    def test_patch_Tag_authorized(self):
         response = self.client.post(reverse("signin"), self.user_data, format='json')
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
-        response = client.patch(reverse("tag-detail", kwargs={"pk": 3}), data={"name": "new_tag"})
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
+        response = self.client.patch(reverse(self.url_detail, kwargs={"pk": 3}), data={"name": "new_Tag"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], 'new_tag')
+        self.assertEqual(response.data['name'], 'new_Tag')
 
-    def test_delete_tag_unauthorized(self):
-        response = self.client.delete(reverse("tag-detail", kwargs={"pk": 3}))
+    def test_delete_Tag_unauthorized(self):
+        response = self.client.delete(reverse(self.url_detail, kwargs={"pk": 3}))
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_delete_tag_authorized(self):
+    def test_delete_Tag_authorized(self):
         response = self.client.post(reverse("signin"), self.user_data, format='json')
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
-        response = client.delete(reverse("tag-detail", kwargs={"pk": 3}))
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
+        response = self.client.delete(reverse(self.url_detail, kwargs={"pk": 3}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
